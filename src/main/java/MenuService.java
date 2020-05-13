@@ -1,4 +1,6 @@
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuService {
@@ -47,6 +49,23 @@ public class MenuService {
 
         public void addDishToMenu (EntityManager em, Scanner scanner){
 
+            String dishName;
+            String menuName;
+
+            System.out.println("Input name of the dish");
+            dishName = scanner.nextLine();
+
+            System.out.println("Input name of the menu");
+            menuName = scanner.nextLine();
+
+        Query query = em.createNamedQuery("Menu.findAll", MenuOfRestaurant.class);
+            query.setParameter("name", menuName);
+            MenuOfRestaurant menu = (MenuOfRestaurant) query.getSingleResult();
+
+            Query dishQuery = em.createNamedQuery("Menu.findAll", MenuOfRestaurant.class);
+            dishQuery.setParameter("name", dishName);
+            Dish dish = (Dish) query.getSingleResult();
+            dish.setMenuOfRestaurant(menu);
         }
 
         public void getDishesWithPriceBelow (EntityManager em, Scanner scanner){

@@ -2,6 +2,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="Dish")
+@NamedQueries({
+@NamedQuery(name="Dish.findAll", query = "SELECT d FROM Dish d"),
+@NamedQuery(name="Dish.findByName", query = "SELECT d FROM Dish d WHERE d.name = :name")
+})
 public class Dish {
 
     @Id

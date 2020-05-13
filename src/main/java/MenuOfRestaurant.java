@@ -4,6 +4,10 @@ import java.util.List;
 
 @Entity
 @Table(name="MenuOfRestaurant")
+@NamedQueries({
+        @NamedQuery(name="Menu.findAll", query = "SELECT m FROM MenuOfRestaurant m"),
+        @NamedQuery(name="Menu.findByName", query = "SELECT m FROM MenuOfRestaurant m WHERE m.name = :name")
+})
 public class MenuOfRestaurant {
 
     @Id
