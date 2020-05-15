@@ -67,7 +67,15 @@ public class MenuService {
         Query dishQuery = em.createNamedQuery("Dish.findByName", Dish.class);
         dishQuery.setParameter("name", dishName);
         Dish dish = (Dish) query.getSingleResult();
-        dish.setMenuOfRestaurant(menu);
+
+        em.getTransaction().begin();
+        try {
+            dish.setMenuOfRestaurant(menu);
+            em.getTransaction().commit();
+        }catch (Exception ex){
+            em.getTransaction().rollback();
+        }
+
     }
 
     public void getDishesWithPriceBelow(EntityManager em, Scanner scanner) {
