@@ -1,6 +1,8 @@
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -8,7 +10,7 @@ public class App {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPAmenu");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPATest");
         EntityManager em = emf.createEntityManager();
         MenuService menuService = new MenuService();
 
@@ -19,11 +21,11 @@ public class App {
                 long gid1, gid2;
 
                 for (int i = 0; i < 3; i++) {
-                    dish = new Dish("Name" + i, new Long(i*10), new Long(1*30), new Long(i)) ;
+                    dish = new Dish("Name" + i, new Long((i*10)+1), new Long((i+1)*200), new Long(i)) ;
                     menu1.addDish(dish);
                 }
                 for (int i = 0; i < 2; i++) {
-                    dish = new Dish("Name" + (i+5), new Long(i*10), new Long(1*30), new Long(i));
+                    dish = new Dish("Name" + (i+5), new Long((i*10)+1), new Long((i+1)*200), new Long(i));
                     menu2.addDish(dish);
                 }
 
@@ -35,13 +37,17 @@ public class App {
 
                     System.out.println("New menu id #1: " + (gid1 = menu1.getId()));
                     System.out.println("New menu id #2: " + (gid2 = menu2.getId()));
+
+                    Query query = em.createQuery("SELECT d FROM Dish d", Dish.class);
+                    List<Dish> dishList = query.getResultList();
+
+                    for (Dish dish1 : dishList) {
+                        System.out.println(dish1);
+                    }
                 } catch (Exception ex) {
                     em.getTransaction().rollback();
                     return;
                 }
-
-                /*Query queryDishes = em.createQuery("SELECT name FROM MenuOfRestaurant ");
-                List<Dish> dishesResultList = queryDishes.getResultList();*/
 
             while (true) {
                 System.out.println("1: add dish");
@@ -62,10 +68,10 @@ public class App {
                         menuService.getDishesWithPriceBelow(em,scanner);
                         break;
                     case "4":
-                        menuService.getDishesWithDiscount(em,scanner);
+                        menuService.getDishesWithDiscount(em);
                         break;
                     case "5":
-                        menuService.getDishesWithPriceLowerThan(em,scanner);
+                        menuService.getDishesWithWeightLowerThan(em,scanner);
                         break;
 
                     default:
@@ -74,6 +80,7 @@ public class App {
             }
 
             } finally {
+                scanner.close();
                 em.close();
                 emf.close();
 
