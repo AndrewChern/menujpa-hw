@@ -3,8 +3,8 @@ import javax.persistence.*;
 @Entity
 @Table(name="Dish")
 @NamedQueries({
-@NamedQuery(name="Dish.findAll", query = "SELECT d FROM Dish d"),
-@NamedQuery(name="Dish.findByName", query = "SELECT d FROM Dish d WHERE d.name = :name")
+    @NamedQuery(name="Dish.findAll", query = "SELECT d FROM Dish d"),
+    @NamedQuery(name="Dish.findByName", query = "SELECT d FROM Dish d WHERE d.name = :name")
 })
 public class Dish {
 
@@ -15,14 +15,14 @@ public class Dish {
     @Column(name="name", nullable = false)
     private String name;
 
-    @Column(name="price", nullable = false)
-    private long price;
+    @Column(name="price")
+    private Long price;
 
-    @Column(name="weight", nullable = false)
-    private long weight;
+    @Column(name="weight")
+    private Long weight;
 
-    @Column(name="discount", nullable = false)
-    private long discount;
+    @Column(name="discount")
+    private Long discount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="menu_id")
