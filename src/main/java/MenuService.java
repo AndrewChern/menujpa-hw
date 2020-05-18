@@ -6,8 +6,6 @@ import java.util.Scanner;
 
 public class MenuService {
 
-    private static Dish dish;
-
     private static MenuOfRestaurant menu;
 
     public MenuService() {
@@ -34,18 +32,14 @@ public class MenuService {
 
         em.getTransaction().begin();
 
-        try {
-            Dish dish1 = new Dish(name, price, weight, discount);
+        Dish dish = new Dish(name, price, weight, discount);
 
-            try {
-                em.persist(dish1);
-                em.getTransaction().commit();
-            } catch (Exception ex) {
-                em.getTransaction().rollback();
-                return;
-            }
-        } finally {
-            em.close();
+        try {
+            em.persist(dish);
+            em.getTransaction().commit();
+        } catch (Exception ex) {
+            em.getTransaction().rollback();
+            return;
         }
     }
 
@@ -72,7 +66,7 @@ public class MenuService {
         try {
             dish.setMenuOfRestaurant(menu);
             em.getTransaction().commit();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             em.getTransaction().rollback();
         }
 
@@ -111,13 +105,13 @@ public class MenuService {
         long dishesWeightSum = (long) 0.0;
         String dishName;
 
-        while (dishesWeightSum<1000){
+        while (dishesWeightSum < 1000) {
             System.out.println("Input name of the dish:");
             dishName = scanner.nextLine();
             Query dishQuery = em.createNamedQuery("Dish.findByName", Dish.class);
             dishQuery.setParameter("name", dishName);
             Dish dishFromRequest = (Dish) dishQuery.getSingleResult();
-            dishesWeightSum +=dishFromRequest.getWeight();
+            dishesWeightSum += dishFromRequest.getWeight();
             dishList.add(dishFromRequest);
         }
 
